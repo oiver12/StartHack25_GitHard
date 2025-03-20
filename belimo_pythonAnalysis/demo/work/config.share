@@ -1,0 +1,7 @@
+{
+  "shareCredentialsVersion": 1,
+  "bearerToken": "UXcM-0WkHq8P3oH-VWRSkFoeLhRdgneID7mWXR2hlZVSVkKVdf1C2bvZs4S27dDs",
+  "endpoint": "https://europe-west1.gcp.databricks.com/api/2.0/delta-sharing/metastores/9beaf95c-f223-4e17-b954-7d0e4df26e3c",
+  "expirationTime": "2025-03-22T14:26:55.140Z"
+}
+
