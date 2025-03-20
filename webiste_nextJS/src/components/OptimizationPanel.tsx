@@ -36,7 +36,7 @@ export function OptimizationPanel({ onOptimize }: OptimizationPanelProps) {
     }
 
     // Animate up to target value
-    const duration = 1000; // 1 second animation
+    const duration = 2000; // 1 second animation
     const steps = 60; // 60 steps for smooth animation
     const increment = (targetValue - optimizationIndex) / steps;
     const stepDuration = duration / steps;

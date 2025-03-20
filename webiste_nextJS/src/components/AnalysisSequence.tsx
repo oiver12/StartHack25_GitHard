@@ -1,5 +1,11 @@
 "use client";
-import { useState, forwardRef, useImperativeHandle, useEffect } from "react";
+import {
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useEffect,
+  useRef,
+} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TemperatureChart } from "./TemperatureChart";
 import { useAppState, AppState } from "@/context/AppStateContext";
@@ -16,6 +22,7 @@ type AnalysisStep = {
   buildUpTime: number;
   analysisTime?: number; // Optional override for analysis time
   datatype: string; // Added datatype parameter
+  sensorId?: string; // Optional sensor ID for positioning
 };
 
 // Props for the sequence component
@@ -29,6 +36,7 @@ type AnalysisSequenceProps = {
 
 export type AnalysisSequenceRef = {
   startAnalysis: () => void;
+  onStepChange?: ((step: number) => void) | null;
 };
 
 export const AnalysisSequence = forwardRef<
@@ -50,6 +58,9 @@ export const AnalysisSequence = forwardRef<
     const [isChartAnalyzing, setIsChartAnalyzing] = useState(false);
     const { state, startAnalysis, finishAnalysis } = useAppState();
 
+    // Ref to store the onStepChange callback
+    const onStepChangeRef = useRef<((step: number) => void) | null>(null);
+
     // Monitor app state changes
     useEffect(() => {
       if (state === AppState.ANALYSE && currentStepIndex === -1) {
@@ -58,12 +69,25 @@ export const AnalysisSequence = forwardRef<
       }
     }, [state, currentStepIndex]);
 
+    // Call onStepChange callback when currentStepIndex changes
+    useEffect(() => {
+      if (currentStepIndex >= 0 && onStepChangeRef.current) {
+        onStepChangeRef.current(currentStepIndex);
+      }
+    }, [currentStepIndex]);
+
     const startAnalysisSequence = () => {
       startAnalysis();
     };
 
     useImperativeHandle(ref, () => ({
       startAnalysis: startAnalysisSequence,
+      get onStepChange() {
+        return onStepChangeRef.current;
+      },
+      set onStepChange(callback: ((step: number) => void) | null) {
+        onStepChangeRef.current = callback;
+      },
     }));
 
     // Handle completion of a chart's analysis

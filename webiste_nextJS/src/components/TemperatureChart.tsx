@@ -53,12 +53,6 @@ export function TemperatureChart({
 }: ChartProps) {
   const [visibleDataPoints, setVisibleDataPoints] = useState<number>(0);
   const [analysisStage, setAnalysisStage] = useState<AnalysisStage>("building");
-  const [analysisMetrics, setAnalysisMetrics] = useState<{
-    mean: number;
-    max: number;
-    min: number;
-    trend: "up" | "down" | "stable";
-  } | null>(null);
 
   // Process chart data
   const chartData = data.map((entry) => ({
@@ -72,41 +66,23 @@ export function TemperatureChart({
 
   // Reset component on xAxis or yAxis change (different chart)
   useEffect(() => {
-    console.log(`Chart parameters changed: ${xAxis}, ${yAxis}`);
     setVisibleDataPoints(0);
     setAnalysisStage("building");
-    setAnalysisMetrics(null);
   }, [xAxis, yAxis]);
-
-  // Calculate analysis metrics when chart is built
-  const calculateMetrics = () => {
-    const values = chartData.map((entry) => entry.y);
-    const mean = values.reduce((a, b) => a + b, 0) / values.length;
-    const trend = values[values.length - 1] > values[0] ? "up" : "down";
-
-    setAnalysisMetrics({
-      mean: Number(mean.toFixed(2)),
-      max: Number(maxY.toFixed(2)),
-      min: Number(minY.toFixed(2)),
-      trend,
-    });
-  };
 
   // Handle the animation stages
   useEffect(() => {
-    console.log(`Analysis stage: ${analysisStage}`);
-
     if (analysisStage === "building") {
-      console.log(
-        `Building chart with ${chartData.length} points at ${buildUpTime}ms per point`
-      );
       const interval = setInterval(() => {
         setVisibleDataPoints((prev) => {
           if (prev < chartData.length) {
             return prev + 1;
           }
           clearInterval(interval);
-          setAnalysisStage("analyzing");
+          // Add a short pause before moving to analyzing stage
+          setTimeout(() => {
+            setAnalysisStage("analyzing");
+          }, 200); // 500ms pause after building is complete
           return prev;
         });
       }, buildUpTime);
@@ -116,7 +92,6 @@ export function TemperatureChart({
       // Start analysis animation
       console.log("Starting analysis animation");
       const analysisTimer = setTimeout(() => {
-        calculateMetrics();
         setAnalysisStage("complete");
       }, 2000); // 2 seconds of analysis animation
 
@@ -228,22 +203,6 @@ export function TemperatureChart({
             >
               Analyzing Data...
             </motion.div>
-          </motion.div>
-        )}
-
-        {analysisStage === "complete" && analysisMetrics && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="absolute bottom-4 right-4 bg-[#1E1E1E] p-4 rounded-lg text-white"
-          >
-            <h3 className="font-bold mb-2">Analysis Results:</h3>
-            <div className="space-y-1 text-sm">
-              <p>Mean: {analysisMetrics.mean}</p>
-              <p>Max: {analysisMetrics.max}</p>
-              <p>Min: {analysisMetrics.min}</p>
-              <p>Trend: {analysisMetrics.trend}</p>
-            </div>
           </motion.div>
         )}
       </AnimatePresence>
