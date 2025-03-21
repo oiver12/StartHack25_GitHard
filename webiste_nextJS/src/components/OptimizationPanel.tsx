@@ -166,7 +166,7 @@ export function OptimizationPanel({ onOptimize }: OptimizationPanelProps) {
                 "p"
               )} ${
                 state === AppState.ANALYSED
-                  ? `bg-[${colors.green.light}] text-black`
+                  ? `bg-[#1EDB3E] text-black`
                   : "bg-white text-black"
               }`}
               onClick={handleOptimise}
