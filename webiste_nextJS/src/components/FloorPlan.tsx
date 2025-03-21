@@ -134,7 +134,8 @@ export function FloorPlan({
                 <div className="relative">
                   {/* Active sensor - orange with pulsing ring */}
                   <div
-                    className={`w-[20px] h-[20px] rounded-full bg-[${colors.primary.orange}] flex items-center justify-center`}
+                    className="w-[20px] h-[20px] rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: colors.primary.orange }}
                   >
                     {sensor.label && (
                       <span className="text-white text-xs font-bold"></span>
@@ -143,7 +144,11 @@ export function FloorPlan({
 
                   {/* Outer pulsing ring */}
                   <motion.div
-                    className={`absolute top-1/2 left-1/2 w-[30px] h-[30px] rounded-full bg-[${colors.primary.orange}] bg-opacity-50 -translate-x-1/2 -translate-y-1/2`}
+                    className="absolute top-1/2 left-1/2 w-[30px] h-[30px] rounded-full -translate-x-1/2 -translate-y-1/2"
+                    style={{
+                      backgroundColor: colors.primary.orange,
+                      opacity: 0.5,
+                    }}
                     animate={{
                       scale: [1, 1.3, 1],
                       opacity: [0.7, 0.3, 0.7],
@@ -158,7 +163,8 @@ export function FloorPlan({
               ) : sensorState === "optimized" ? (
                 // Optimized sensor - green
                 <motion.div
-                  className={`w-[20px] h-[20px] rounded-full bg-[#1EDB3E] flex items-center justify-center`}
+                  className="w-[20px] h-[20px] rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: colors.green.light }}
                   initial={{ scale: 1 }}
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 0.5 }}
@@ -170,7 +176,8 @@ export function FloorPlan({
               ) : sensorState === "analyzed" ? (
                 // Previously analyzed sensor - fully orange
                 <div
-                  className={`w-[20px] h-[20px] rounded-full bg-[${colors.primary.orange}] flex items-center justify-center`}
+                  className="w-[20px] h-[20px] rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: colors.primary.orange }}
                 >
                   {sensor.label && (
                     <span className="text-white text-xs font-bold"></span>
@@ -179,7 +186,11 @@ export function FloorPlan({
               ) : (
                 // Not yet analyzed sensor - grey with orange border
                 <div
-                  className={`w-[20px] h-[20px] rounded-full bg-[${colors.ui.gray}] border-2 border-[${colors.primary.orange}] flex items-center justify-center`}
+                  className="w-[20px] h-[20px] rounded-full flex items-center justify-center"
+                  style={{
+                    backgroundColor: colors.ui.gray,
+                    border: `2px solid ${colors.primary.orange}`,
+                  }}
                 >
                   {sensor.label && (
                     <span className="text-white text-xs font-bold"></span>

@@ -15,7 +15,8 @@ import { Card } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { colors } from "@/config/colors";
 import { speedControl } from "@/config/speedControl";
-speedControl.chartBuildUpTime; // Register ChartJS components
+
+// Register ChartJS components
 ChartJS.register(
   CategoryScale,
   LinearScale,
