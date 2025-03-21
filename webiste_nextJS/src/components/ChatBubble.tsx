@@ -140,7 +140,7 @@ export function ChatBubble() {
     progressTimerRef.current = setInterval(() => {
       if (hashCount < maxHashes) {
         hashCount++;
-        setProgressBar((prev) => {
+        setProgressBar(() => {
           const hashes = "#".repeat(hashCount);
           const spaces = " ".repeat(maxHashes - hashCount);
           const percent = Math.floor((hashCount / maxHashes) * 100);

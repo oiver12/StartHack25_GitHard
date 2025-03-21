@@ -9,12 +9,10 @@ import {
   Title,
   Tooltip,
   Legend,
-  ChartArea,
-  ScriptableContext,
 } from "chart.js";
 import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { colors } from "@/config/colors";
 // Register ChartJS components
 ChartJS.register(
@@ -47,7 +45,6 @@ export const OptimizedChart: React.FC<OptimizedChartProps> = ({
   title,
 }) => {
   const [pointIndex, setPointIndex] = useState(0);
-  const chartRef = useRef(null);
 
   // Create a map of timestamps to optimized values for efficient lookup
   const optimizedMap = new Map(
