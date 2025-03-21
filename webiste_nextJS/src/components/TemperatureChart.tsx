@@ -139,10 +139,17 @@ export function TemperatureChart({
     },
     plugins: {
       legend: {
+        display: false, // Hide the legend box completely
         position: "top" as const,
+        labels: {
+          color: "white",
+          font: {
+            size: 12,
+          },
+        },
       },
       title: {
-        display: true,
+        display: false,
         text: title,
         color: "white",
         font: {
@@ -163,9 +170,13 @@ export function TemperatureChart({
         beginAtZero: false,
         grid: {
           color: "rgba(255, 255, 255, 0.1)",
+          drawBorder: false,
         },
         ticks: {
           color: "white",
+        },
+        border: {
+          display: false,
         },
       },
       x: {
@@ -176,6 +187,7 @@ export function TemperatureChart({
         },
         grid: {
           color: "rgba(255, 255, 255, 0.1)",
+          drawBorder: false,
         },
         ticks: {
           color: "white",
@@ -185,7 +197,7 @@ export function TemperatureChart({
   };
 
   return (
-    <Card className="w-full max-w-4xl p-4 bg-[#141414] rounded-lg shadow-lg relative border-0">
+    <Card className="w-full h-full bg-transparent border-none">
       <Line options={options} data={chartConfig} />
 
       <AnimatePresence>
@@ -197,7 +209,7 @@ export function TemperatureChart({
             className="absolute bottom-0 left-0 right-0 bg-black/10 flex items-center justify-center py-4"
           >
             <motion.div
-              className={`text-lg font-bold text-[${colors.primary.orange}]`}
+              className="text-lg font-bold text-[#FF6B00]"
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ repeat: Infinity, duration: 1 }}
             >

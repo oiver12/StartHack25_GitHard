@@ -187,15 +187,15 @@ export function ChatBubble() {
   }, [messages, progressBar, currentMessage]);
 
   return (
-    <div className="flex flex-col h-[395px] w-full relative">
+    <div className="flex flex-col h-[100%] w-full relative center">
       {/* Chat message */}
       <div className="flex-1 overflow-y-auto mb-[16px] p-[8px] font-mono text-sm scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
-        <div className="flex flex-col gap-[12px]">
+        <div className="flex flex-col gap-[16px]">
           {/* Previous messages */}
           {messages.map((msg, index) => (
             <div
               key={index}
-              className="bg-[#1E1E1E] rounded-lg p-[12px] w-full text-white whitespace-pre-line"
+              className="bg-[#1E1E1E] rounded-lg p-[12px] w-full text-white whitespace-pre-line text-[18px]"
             >
               {msg}
             </div>
@@ -203,7 +203,7 @@ export function ChatBubble() {
 
           {/* Currently typing message */}
           {isTyping && currentMessage && (
-            <div className="bg-[#1E1E1E] rounded-lg p-[12px] w-full text-white whitespace-pre-line">
+            <div className="bg-[#1E1E1E] rounded-lg p-[12px] w-full text-white whitespace-pre-line text-[18px]">
               {currentMessage.substring(0, charIndex)}
               <span className="animate-pulse">|</span>
             </div>
@@ -211,7 +211,7 @@ export function ChatBubble() {
 
           {/* Progress bar during analysis */}
           {isAnalyzing && progressBar && (
-            <div className="bg-[#1E1E1E] rounded-lg p-[12px] w-full text-green-400 font-mono">
+            <div className="bg-[#1E1E1E] rounded-lg p-[12px] w-full text-[#1ebd1E] font-mono text-[15px]">
               {progressBar}
             </div>
           )}

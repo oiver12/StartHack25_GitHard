@@ -3,23 +3,24 @@ import { getTypographyClass } from "@/styles/typography";
 
 export function Header() {
   return (
-    <header className="flex items-center p-[16px]">
+    <header className="flex items-center pt-[16px]">
       {/* Empty space with configurable width */}
-      <div style={{ width: "330px" }} />
+      <div style={{ width: "22%" }} />
 
       {/* Navigation items */}
-      <nav className="flex gap-[32px]">
-        <div className={`${getTypographyClass("p")} text-[#FF6B00]`}>
+      <nav className="flex gap-[24px]">
+        <div className={`${getTypographyClass("h3")} text-[#FF6B00]`}>
           DASHBOARD
         </div>
-        <div className={getTypographyClass("p")}>DATA</div>
-        <div className={getTypographyClass("p")}>PARAMETERS</div>
-        <div className={getTypographyClass("p")}>REPORT</div>
+        <div className={getTypographyClass("h3")}>DATA</div>
+        <div className={getTypographyClass("h3")}>PARAMETERS</div>
+        <div className={getTypographyClass("h3")}>REPORT</div>
       </nav>
 
       {/* Push logout to the right */}
       <div className="flex-1" />
-      <div className={getTypographyClass("p")}>LOGOUT</div>
+      <div className={getTypographyClass("h3")}>LOGOUT</div>
+      <div style={{ width: "2%" }} />
     </header>
   );
 }

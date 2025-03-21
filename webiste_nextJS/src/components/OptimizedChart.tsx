@@ -15,7 +15,7 @@ import {
 import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { useState, useEffect, useRef } from "react";
-
+import { colors } from "@/config/colors";
 // Register ChartJS components
 ChartJS.register(
   CategoryScale,
@@ -101,6 +101,7 @@ export const OptimizedChart: React.FC<OptimizedChartProps> = ({
     },
     plugins: {
       legend: {
+        display: false,
         position: "top" as const,
         labels: {
           color: "white",
@@ -110,7 +111,7 @@ export const OptimizedChart: React.FC<OptimizedChartProps> = ({
         },
       },
       title: {
-        display: true,
+        display: false,
         text: title,
         color: "white",
         font: {
@@ -157,8 +158,8 @@ export const OptimizedChart: React.FC<OptimizedChartProps> = ({
       {
         label: "Current Data",
         data: originalData.map((d) => Number(d[yAxis])),
-        borderColor: "#FF6B00",
-        backgroundColor: "rgba(255, 107, 0, 0.1)",
+        borderColor: `rgba(255, 107, 0, 0.5)`,
+        backgroundColor: colors.primary.orangeTransparent,
         fill: true,
         pointRadius: 0,
         borderWidth: 2,
@@ -169,7 +170,7 @@ export const OptimizedChart: React.FC<OptimizedChartProps> = ({
         data: timestamps.map((t, idx) =>
           idx <= pointIndex ? getClosestOptimizedValue(t) : NaN
         ),
-        borderColor: "rgb(0, 255, 0)",
+        borderColor: colors.green.light,
         backgroundColor: "transparent",
         fill: false,
         pointRadius: 0,
@@ -181,7 +182,7 @@ export const OptimizedChart: React.FC<OptimizedChartProps> = ({
   };
 
   return (
-    <Card className="w-full max-w-[100%] p-4 bg-[#141414] rounded-lg shadow-lg relative border-0 h-[500px]">
+    <Card className="w-full h-full bg-transparent border-none">
       <Line options={options} data={chartData} />
     </Card>
   );
