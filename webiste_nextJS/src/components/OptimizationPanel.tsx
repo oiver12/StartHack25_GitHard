@@ -4,6 +4,7 @@ import { GaugeComponent } from "react-gauge-component";
 import Image from "next/image";
 import { useAppState, AppState } from "@/context/AppStateContext";
 import { getTypographyClass } from "@/styles/typography";
+import { colors } from "@/config/colors";
 
 interface OptimizationPanelProps {
   onOptimize?: () => void;
@@ -19,10 +20,10 @@ export function OptimizationPanel({ onOptimize }: OptimizationPanelProps) {
     let targetValue = 0;
     switch (state) {
       case AppState.ANALYSED:
-        targetValue = 21;
+        targetValue = 35;
         break;
       case AppState.DONE:
-        targetValue = 80;
+        targetValue = 47;
         break;
       default:
         targetValue = 0;
@@ -71,7 +72,7 @@ export function OptimizationPanel({ onOptimize }: OptimizationPanelProps) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className={`text-center mb-[24px] ${getTypographyClass("h2")}`}>
+      <div className={`text-center mb-[5px] ${getTypographyClass("h2")}`}>
         OPTIMISATION INDEX
       </div>
 
@@ -82,13 +83,16 @@ export function OptimizationPanel({ onOptimize }: OptimizationPanelProps) {
           style={{ width: "500px", height: "250px" }}
           type="semicircle"
           arc={{
-            width: 0.15,
+            width: 0.1,
             padding: 0,
             cornerRadius: 1,
             subArcs: [
               {
                 limit: optimizationIndex,
-                color: state === AppState.DONE ? "#00FF00" : "#FF6B00",
+                color:
+                  state === AppState.DONE
+                    ? colors.green.light
+                    : colors.primary.orange,
                 showTick: false,
               },
               {
@@ -106,10 +110,15 @@ export function OptimizationPanel({ onOptimize }: OptimizationPanelProps) {
           labels={{
             valueLabel: { hide: true },
             tickLabels: {
-              type: "outer",
+              type: "inner",
               ticks: [{ value: 0 }, { value: 100 }],
               defaultTickValueConfig: {
-                style: { fill: "#666666", fontSize: "14px" },
+                formatTextValue: (value) => `${value}%`,
+                style: {
+                  fill: "white",
+                  fontSize: "16px",
+                  fontFamily: "Montserrat",
+                },
               },
             },
           }}
@@ -119,7 +128,7 @@ export function OptimizationPanel({ onOptimize }: OptimizationPanelProps) {
         />
         {/* Custom centered text with AI icon */}
         <div className="absolute bottom-[50px] left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-          <div className="relative w-[48px] h-[48px] mb-[16px]">
+          <div className="relative w-[40px] h-[40px] mb-[16px]">
             <Image
               src="/_498lZ1.tif.png"
               alt="AI Icon"
@@ -137,40 +146,46 @@ export function OptimizationPanel({ onOptimize }: OptimizationPanelProps) {
         </div>
       </div>
 
-      {/* Action buttons */}
-      <div className="mt-[32px] space-y-[16px] max-w-[400px] mx-auto w-full">
-        <div className="flex gap-[16px]">
+      {/* Buttons section with divider */}
+      <div className="flex flex-col gap-16">
+        <div className="w-full h-[1px] bg-white/30"></div>
+
+        <div className="space-y-[16px] max-w-[400px] mx-auto w-full">
+          <div className="flex gap-[16px]">
+            <button
+              className={`flex-1 py-[12px] bg-[#1E1E1E] rounded-[8px] font-semibold transition-colors duration-300 ${getTypographyClass(
+                "p"
+              )}`}
+              onClick={handleAnalyse}
+              disabled={state !== AppState.SELECT}
+            >
+              ANALYSE
+            </button>
+            <button
+              className={`flex-1 py-[12px] rounded-[8px] font-semibold transition-colors duration-300 ${getTypographyClass(
+                "p"
+              )} ${
+                state === AppState.ANALYSED
+                  ? `bg-[${colors.green.light}] text-black`
+                  : "bg-white text-black"
+              }`}
+              onClick={handleOptimise}
+              disabled={state !== AppState.ANALYSED}
+            >
+              OPTIMISE
+            </button>
+          </div>
           <button
-            className={`flex-1 py-[12px] bg-[#1E1E1E] rounded-[8px] transition-colors duration-300 ${getTypographyClass(
+            className={`w-full py-[16px] bg-[${
+              colors.primary.orange
+            }] rounded-[8px] transition-colors font-semibold duration-300 ${getTypographyClass(
               "p"
             )}`}
-            onClick={handleAnalyse}
-            disabled={state !== AppState.SELECT}
+            disabled={state !== AppState.DONE}
           >
-            ANALYSE
-          </button>
-          <button
-            className={`flex-1 py-[12px] rounded-[8px] transition-colors duration-300 ${getTypographyClass(
-              "p"
-            )} ${
-              state === AppState.ANALYSED
-                ? "bg-[#00FF00] text-black"
-                : "bg-white text-black"
-            }`}
-            onClick={handleOptimise}
-            disabled={state !== AppState.ANALYSED}
-          >
-            OPTIMISE
+            PUSH OPTIMISATION TO DEVICES
           </button>
         </div>
-        <button
-          className={`w-full py-[16px] bg-[#FF6B00] rounded-[8px] transition-colors duration-300 ${getTypographyClass(
-            "p"
-          )}`}
-          disabled={state !== AppState.DONE}
-        >
-          PUSH OPTIMISATION TO DEVICES
-        </button>
       </div>
     </div>
   );

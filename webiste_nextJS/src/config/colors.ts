@@ -9,6 +9,9 @@ export const colors = {
     greenAlt: "#00FF00",
     greenTransparent: "rgba(0, 255, 0, 0.1)",
   },
+  green: {
+    light: "#1EDB3E",
+  },
   ui: {
     gray: "#555555",
     darkGray: "#1E1E1E",

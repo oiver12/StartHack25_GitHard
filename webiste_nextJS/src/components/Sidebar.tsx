@@ -12,15 +12,13 @@ interface SidebarProps {
 
 export function Sidebar({ floors }: SidebarProps) {
   return (
-    <div className="w-[320px] p-[24px]">
+    <div className="w-[410px] p-[24px]">
       <div className="mb-[48px]">
         <div className={getTypographyClass("h1")}>BELIMO</div>
-        <div className={getTypographyClass("h2")}>SMART SENCE</div>
+        <div className={getTypographyClass("h1_1")}>SMART SENCE</div>
       </div>
 
-      <div className={getTypographyClass("h2")}>
-        SIEMENS OFFICE BUILDING ZH5
-      </div>
+      <div className={getTypographyClass("h2")}>SIEMENS OFFICE BUILDING</div>
 
       <div className="space-y-[24px] mt-[24px]">
         {floors.map((floor, index) => (

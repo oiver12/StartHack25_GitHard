@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useAppState, AppState } from "@/context/AppStateContext";
 import { motion } from "framer-motion";
+import { colors } from "@/config/colors";
 
 export type SensorPosition = {
   id: string;
@@ -105,12 +106,9 @@ export function FloorPlan({
   };
 
   return (
-    <div className="relative h-full min-h-[400px] flex items-center justify-center">
+    <div className="relative h-full min-h-[400px] flex items-start pt-[0%] justify-center">
       {/* Building Image */}
-      <div
-        className="relative"
-        style={{ width: `${600}px`, height: `${365}px` }}
-      >
+      <div className="relative" style={{ width: `85%`, height: `85%` }}>
         <Image
           src="/building.png"
           alt="Building Floor Plan"
@@ -135,7 +133,9 @@ export function FloorPlan({
               {sensorState === "active" ? (
                 <div className="relative">
                   {/* Active sensor - orange with pulsing ring */}
-                  <div className="w-[20px] h-[20px] rounded-full bg-[#FF6B00] flex items-center justify-center">
+                  <div
+                    className={`w-[20px] h-[20px] rounded-full bg-[${colors.primary.orange}] flex items-center justify-center`}
+                  >
                     {sensor.label && (
                       <span className="text-white text-xs font-bold"></span>
                     )}
@@ -143,7 +143,7 @@ export function FloorPlan({
 
                   {/* Outer pulsing ring */}
                   <motion.div
-                    className="absolute top-1/2 left-1/2 w-[30px] h-[30px] rounded-full bg-[#FF6B00] bg-opacity-50 -translate-x-1/2 -translate-y-1/2"
+                    className={`absolute top-1/2 left-1/2 w-[30px] h-[30px] rounded-full bg-[${colors.primary.orange}] bg-opacity-50 -translate-x-1/2 -translate-y-1/2`}
                     animate={{
                       scale: [1, 1.3, 1],
                       opacity: [0.7, 0.3, 0.7],
@@ -158,7 +158,7 @@ export function FloorPlan({
               ) : sensorState === "optimized" ? (
                 // Optimized sensor - green
                 <motion.div
-                  className="w-[20px] h-[20px] rounded-full bg-[#00FF00] flex items-center justify-center"
+                  className={`w-[20px] h-[20px] rounded-full bg-[#1EDB3E] flex items-center justify-center`}
                   initial={{ scale: 1 }}
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 0.5 }}
@@ -169,14 +169,18 @@ export function FloorPlan({
                 </motion.div>
               ) : sensorState === "analyzed" ? (
                 // Previously analyzed sensor - fully orange
-                <div className="w-[20px] h-[20px] rounded-full bg-[#FF6B00] flex items-center justify-center">
+                <div
+                  className={`w-[20px] h-[20px] rounded-full bg-[${colors.primary.orange}] flex items-center justify-center`}
+                >
                   {sensor.label && (
                     <span className="text-white text-xs font-bold"></span>
                   )}
                 </div>
               ) : (
                 // Not yet analyzed sensor - grey with orange border
-                <div className="w-[20px] h-[20px] rounded-full bg-[#555555] border-2 border-[#FF6B00] flex items-center justify-center">
+                <div
+                  className={`w-[20px] h-[20px] rounded-full bg-[${colors.ui.gray}] border-2 border-[${colors.primary.orange}] flex items-center justify-center`}
+                >
                   {sensor.label && (
                     <span className="text-white text-xs font-bold"></span>
                   )}

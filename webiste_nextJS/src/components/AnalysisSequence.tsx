@@ -115,7 +115,7 @@ export const AnalysisSequence = forwardRef<
       {/* Datatype display at the top */}
       <div className="flex justify-end mb-[8px]">
         {currentStepIndex >= 0 && steps[currentStepIndex] && (
-          <div className={`${getTypographyClass("p")} text-[#FF6B00]`}>
+          <div className={`${getTypographyClass("p")} text-[#FFFFFF]`}>
             #{steps[currentStepIndex].datatype}
           </div>
         )}
@@ -123,7 +123,7 @@ export const AnalysisSequence = forwardRef<
 
       {/* Charts Container */}
       <div
-        className={`space-y-8 relative ${
+        className={`space-y-8 relative w-[90%] mx-auto ${
           isChartAnalyzing ? "analyzing-container" : ""
         }`}
       >
@@ -169,7 +169,7 @@ export const AnalysisSequence = forwardRef<
 
       {/* Progress Indicator */}
       {isAnalyzing && (
-        <div className="flex justify-center items-center space-x-2">
+        <div className="flex justify-center items-center space-x-2 mb-4">
           {steps.map((_, index) => (
             <div
               key={index}

@@ -16,6 +16,7 @@ import deviceData4 from "../../mock_data/device_data_sample_4.json";
 import rollingAvgData from "../../mock_data/device_data_rolling_avg.json";
 import { ChatBubble } from "@/components/ChatBubble";
 import { useAppState, AppState } from "@/context/AppStateContext";
+import { cardStyle, cardClassName } from "@/styles/cards";
 
 export default function Home() {
   const analysisRef = useRef<AnalysisSequenceRef>(null);
@@ -72,10 +73,10 @@ export default function Home() {
 
   // Define sensor positions
   const sensorPositions: SensorPosition[] = [
-    { id: "sensor1", x: 22, y: 35, label: "1" },
+    { id: "sensor1", x: 28, y: 38, label: "1" },
     { id: "sensor2", x: 48, y: 7, label: "2" },
-    { id: "sensor3", x: 74, y: 35, label: "3" },
-    { id: "sensor4", x: 72, y: 66, label: "4" },
+    { id: "sensor3", x: 74, y: 43, label: "3" },
+    { id: "sensor4", x: 72, y: 70, label: "4" },
   ];
 
   // Define the analysis steps
@@ -174,26 +175,19 @@ export default function Home() {
       }}
     >
       {/* Content */}
-      <div className="relative z-10 flex flex-col min-h-screen">
+      <div className="relative z-10 flex flex-col h-screen">
         <Header />
 
         {/* Main Content */}
-        <div className="flex flex-1">
+        <div className="flex flex-1 h-[calc(100%-64px)]">
+          {" "}
+          {/* Subtract header height */}
           <Sidebar floors={floors} />
-
           {/* Center and Right Content */}
-          <div className="flex-1 grid grid-cols-5 gap-[16px] p-[16px]">
+          <div className="flex-1 flex gap-[16px] p-[16px] h-full">
             {/* Left column: Floor Plan and Analysis */}
-            <div className="col-span-3 flex flex-col gap-[16px]">
-              <div
-                className="rounded-[16px] overflow-hidden h-[420px] backdrop-blur-sm"
-                style={{
-                  background:
-                    "linear-gradient(180deg, rgba(40, 40, 40, 0.8) 0%, rgba(20, 20, 20, 0.8) 100%)",
-                  boxShadow: "0 4px 24px -1px rgba(0, 0, 0, 0.2)",
-                  backdropFilter: "blur(20px)",
-                }}
-              >
+            <div className="w-[65%] flex flex-col gap-[16px] h-full">
+              <div className={`h-[45%] ${cardClassName}`} style={cardStyle}>
                 <FloorPlan
                   sensors={sensorPositions}
                   currentSensorId={currentSensorId}
@@ -201,13 +195,8 @@ export default function Home() {
                 />
               </div>
               <div
-                className="rounded-[16px] p-[16px] flex-1 backdrop-blur-sm"
-                style={{
-                  background:
-                    "linear-gradient(180deg, rgba(40, 40, 40, 0.8) 0%, rgba(20, 20, 20, 0.8) 100%)",
-                  boxShadow: "0 4px 24px -1px rgba(0, 0, 0, 0.2)",
-                  backdropFilter: "blur(20px)",
-                }}
+                className={`h-[53%] p-[16px] ${cardClassName}`}
+                style={cardStyle}
               >
                 <AnalysisSequence
                   data={
@@ -221,26 +210,16 @@ export default function Home() {
             </div>
 
             {/* Right column: Optimization and Chat */}
-            <div className="col-span-2 flex flex-col gap-[16px]">
+            <div className="w-[35%] flex flex-col gap-[2%] h-full">
               <div
-                className="rounded-[16px] p-[16px] backdrop-blur-sm"
-                style={{
-                  background:
-                    "linear-gradient(180deg, rgba(40, 40, 40, 0.8) 0%, rgba(20, 20, 20, 0.8) 100%)",
-                  boxShadow: "0 4px 24px -1px rgba(0, 0, 0, 0.2)",
-                  backdropFilter: "blur(20px)",
-                }}
+                className={`h-[60%] p-[16px] ${cardClassName}`}
+                style={cardStyle}
               >
                 <OptimizationPanel onOptimize={handleOptimize} />
               </div>
               <div
-                className="rounded-[16px] p-[16px] flex-1 backdrop-blur-sm"
-                style={{
-                  background:
-                    "linear-gradient(180deg, rgba(40, 40, 40, 0.8) 0%, rgba(20, 20, 20, 0.8) 100%)",
-                  boxShadow: "0 4px 24px -1px rgba(0, 0, 0, 0.2)",
-                  backdropFilter: "blur(20px)",
-                }}
+                className={`h-[40%] p-[16px] ${cardClassName}`}
+                style={cardStyle}
               >
                 <ChatBubble />
               </div>
