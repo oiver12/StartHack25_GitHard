@@ -1,6 +1,7 @@
 import React from "react";
 import { getTypographyClass } from "@/styles/typography";
 import { Checkbox } from "@/components/ui/checkbox";
+
 interface SidebarProps {
   floors: {
     floor: string;

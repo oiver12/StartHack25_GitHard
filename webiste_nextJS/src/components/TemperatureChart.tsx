@@ -14,6 +14,7 @@ import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
+import { colors } from "@/config/colors";
 
 // Register ChartJS components
 ChartJS.register(
@@ -27,7 +28,7 @@ ChartJS.register(
 );
 
 export type ChartProps = {
-  data: any[];
+  data: Record<string, number | string | null>[];
   xAxis: string;
   yAxis: string;
   xLabel: string;
@@ -56,8 +57,8 @@ export function TemperatureChart({
 
   // Process chart data
   const chartData = data.map((entry) => ({
-    x: format(new Date(entry[xAxis]), "HH:mm:ss"),
-    y: entry[yAxis],
+    x: format(new Date(entry[xAxis] as string), "HH:mm:ss"),
+    y: Number(entry[yAxis]),
   }));
 
   // Calculate min and max values
@@ -90,14 +91,12 @@ export function TemperatureChart({
       return () => clearInterval(interval);
     } else if (analysisStage === "analyzing") {
       // Start analysis animation
-      console.log("Starting analysis animation");
       const analysisTimer = setTimeout(() => {
         setAnalysisStage("complete");
-      }, 2000); // 2 seconds of analysis animation
+      }, 1500); // 2 seconds of analysis animation
 
       return () => clearTimeout(analysisTimer);
     } else if (analysisStage === "complete") {
-      console.log("Analysis complete, calling callback");
       // Small delay before callback to ensure UI updates
       setTimeout(() => {
         onAnalysisComplete?.();
@@ -120,23 +119,24 @@ export function TemperatureChart({
       {
         label: yLabel,
         data: chartData.map((entry, index) =>
-          index < visibleDataPoints ? entry.y : null
+          index < visibleDataPoints ? entry.y : NaN
         ),
-        borderColor: "#FF6B00",
-        backgroundColor: "rgba(255, 107, 0, 0.1)",
+        borderColor: colors.primary.orange,
+        backgroundColor: colors.primary.orangeTransparent,
         fill: true,
-        pointBackgroundColor: "#FF6B00",
-        pointBorderColor: "#000",
-        pointHoverBackgroundColor: "#000",
-        pointHoverBorderColor: "#FF6B00",
-        tension: 0.1,
-        spanGaps: true,
+        pointRadius: 0,
+        borderWidth: 2,
+        tension: 0.4,
+        spanGaps: false,
       },
     ],
   };
 
   const options = {
     responsive: true,
+    animation: {
+      duration: 0, // disable default animations
+    },
     plugins: {
       legend: {
         position: "top" as const,
@@ -197,7 +197,7 @@ export function TemperatureChart({
             className="absolute bottom-0 left-0 right-0 bg-black/10 flex items-center justify-center py-4"
           >
             <motion.div
-              className="text-lg font-bold text-[#FF6B00]"
+              className={`text-lg font-bold text-[${colors.primary.orange}]`}
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ repeat: Infinity, duration: 1 }}
             >

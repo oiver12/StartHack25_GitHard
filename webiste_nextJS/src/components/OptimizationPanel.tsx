@@ -88,7 +88,7 @@ export function OptimizationPanel({ onOptimize }: OptimizationPanelProps) {
             subArcs: [
               {
                 limit: optimizationIndex,
-                color: "#FF6B00",
+                color: state === AppState.DONE ? "#00FF00" : "#FF6B00",
                 showTick: false,
               },
               {

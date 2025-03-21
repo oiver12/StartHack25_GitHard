@@ -8,6 +8,7 @@ import {
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TemperatureChart } from "./TemperatureChart";
+import { OptimizedChart } from "./OptimizedChart";
 import { useAppState, AppState } from "@/context/AppStateContext";
 import { getTypographyClass } from "@/styles/typography";
 import "@/styles/animations.css";
@@ -27,121 +28,125 @@ type AnalysisStep = {
 
 // Props for the sequence component
 type AnalysisSequenceProps = {
-  data: any[];
+  data: Record<string, number | string | null>[];
   steps: AnalysisStep[];
   defaultBuildUpTime?: number;
-  defaultAnalysisTime?: number;
   onAnalysisComplete?: () => void;
 };
 
 export type AnalysisSequenceRef = {
   startAnalysis: () => void;
   onStepChange?: ((step: number) => void) | null;
+  showOptimizationData: (
+    data: Record<string, number | string | null>[]
+  ) => void;
 };
 
 export const AnalysisSequence = forwardRef<
   AnalysisSequenceRef,
   AnalysisSequenceProps
->(
-  (
-    {
-      data,
-      steps,
-      defaultBuildUpTime = 50,
-      defaultAnalysisTime = 2000,
-      onAnalysisComplete,
+>(({ data, steps, defaultBuildUpTime = 50, onAnalysisComplete }, ref) => {
+  const [currentStepIndex, setCurrentStepIndex] = useState<number>(-1);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isChartAnalyzing, setIsChartAnalyzing] = useState(false);
+  const [optimizationData, setOptimizationData] = useState<
+    Record<string, number | string | null>[] | null
+  >(null);
+  const { state, startAnalysis, finishAnalysis } = useAppState();
+
+  // Ref to store the onStepChange callback
+  const onStepChangeRef = useRef<((step: number) => void) | null>(null);
+
+  // Monitor app state changes
+  useEffect(() => {
+    if (state === AppState.ANALYSE && currentStepIndex === -1) {
+      setIsAnalyzing(true);
+      setCurrentStepIndex(0);
+    }
+  }, [state, currentStepIndex]);
+
+  // Call onStepChange callback when currentStepIndex changes
+  useEffect(() => {
+    if (currentStepIndex >= 0 && onStepChangeRef.current) {
+      onStepChangeRef.current(currentStepIndex);
+    }
+  }, [currentStepIndex]);
+
+  const startAnalysisSequence = () => {
+    startAnalysis();
+  };
+
+  useImperativeHandle(ref, () => ({
+    startAnalysis: startAnalysisSequence,
+    get onStepChange() {
+      return onStepChangeRef.current;
     },
-    ref
-  ) => {
-    const [currentStepIndex, setCurrentStepIndex] = useState<number>(-1);
-    const [isAnalyzing, setIsAnalyzing] = useState(false);
-    const [isChartAnalyzing, setIsChartAnalyzing] = useState(false);
-    const { state, startAnalysis, finishAnalysis } = useAppState();
+    set onStepChange(callback: ((step: number) => void) | null) {
+      onStepChangeRef.current = callback;
+    },
+    showOptimizationData: (data: Record<string, number | string | null>[]) => {
+      setOptimizationData(data);
+    },
+  }));
 
-    // Ref to store the onStepChange callback
-    const onStepChangeRef = useRef<((step: number) => void) | null>(null);
+  // Handle completion of a chart's analysis
+  const handleChartComplete = () => {
+    // Clean up current chart
+    setIsChartAnalyzing(false);
 
-    // Monitor app state changes
-    useEffect(() => {
-      if (state === AppState.ANALYSE && currentStepIndex === -1) {
-        setIsAnalyzing(true);
-        setCurrentStepIndex(0);
-      }
-    }, [state, currentStepIndex]);
+    if (currentStepIndex < steps.length - 1) {
+      // Simple single timeout for transition
+      setTimeout(() => {
+        setCurrentStepIndex(currentStepIndex + 1);
+      }, 1000);
+    } else {
+      setIsAnalyzing(false);
+      finishAnalysis(); // Transition to ANALYSED state
+      onAnalysisComplete?.();
+    }
+  };
 
-    // Call onStepChange callback when currentStepIndex changes
-    useEffect(() => {
-      if (currentStepIndex >= 0 && onStepChangeRef.current) {
-        onStepChangeRef.current(currentStepIndex);
-      }
-    }, [currentStepIndex]);
+  const handleAnalysisStageChange = (stage: string) => {
+    setIsChartAnalyzing(stage === "analyzing");
+  };
 
-    const startAnalysisSequence = () => {
-      startAnalysis();
-    };
+  return (
+    <div className="space-y-4">
+      {/* Datatype display at the top */}
+      <div className="flex justify-end mb-[8px]">
+        {currentStepIndex >= 0 && steps[currentStepIndex] && (
+          <div className={`${getTypographyClass("p")} text-[#FF6B00]`}>
+            #{steps[currentStepIndex].datatype}
+          </div>
+        )}
+      </div>
 
-    useImperativeHandle(ref, () => ({
-      startAnalysis: startAnalysisSequence,
-      get onStepChange() {
-        return onStepChangeRef.current;
-      },
-      set onStepChange(callback: ((step: number) => void) | null) {
-        onStepChangeRef.current = callback;
-      },
-    }));
-
-    // Handle completion of a chart's analysis
-    const handleChartComplete = () => {
-      console.log("Chart analysis complete for step:", currentStepIndex);
-
-      // Clean up current chart
-      setIsChartAnalyzing(false);
-
-      if (currentStepIndex < steps.length - 1) {
-        console.log("Moving to next chart");
-        // Simple single timeout for transition
-        setTimeout(() => {
-          setCurrentStepIndex(currentStepIndex + 1);
-        }, 1000);
-      } else {
-        console.log("All charts completed");
-        setIsAnalyzing(false);
-        finishAnalysis(); // Transition to ANALYSED state
-        onAnalysisComplete?.();
-      }
-    };
-
-    const handleAnalysisStageChange = (stage: string) => {
-      console.log("Analysis stage changed:", stage);
-      setIsChartAnalyzing(stage === "analyzing");
-    };
-
-    return (
-      <div className="space-y-4">
-        {/* Datatype display at the top */}
-        <div className="flex justify-end mb-[8px]">
+      {/* Charts Container */}
+      <div
+        className={`space-y-8 relative ${
+          isChartAnalyzing ? "analyzing-container" : ""
+        }`}
+      >
+        <AnimatePresence mode="wait">
           {currentStepIndex >= 0 && steps[currentStepIndex] && (
-            <div className={`${getTypographyClass("p")} text-[#FF6B00]`}>
-              #{steps[currentStepIndex].datatype}
-            </div>
-          )}
-        </div>
-
-        {/* Charts Container */}
-        <div
-          className={`space-y-8 relative ${
-            isChartAnalyzing ? "analyzing-container" : ""
-          }`}
-        >
-          <AnimatePresence mode="wait">
-            {currentStepIndex >= 0 && steps[currentStepIndex] && (
-              <motion.div
-                key={`chart-motion-${currentStepIndex}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-              >
+            <motion.div
+              key={`chart-motion-${currentStepIndex}`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              {state === AppState.DONE && optimizationData ? (
+                <OptimizedChart
+                  originalData={data}
+                  optimizedData={optimizationData}
+                  xAxis={steps[currentStepIndex].xAxis}
+                  yAxis={steps[currentStepIndex].yAxis}
+                  xLabel={steps[currentStepIndex].xLabel}
+                  yLabel={steps[currentStepIndex].yLabel}
+                  title={steps[currentStepIndex].title}
+                />
+              ) : (
                 <TemperatureChart
                   key={`chart-${currentStepIndex}`}
                   data={data}
@@ -156,32 +161,32 @@ export const AnalysisSequence = forwardRef<
                   onAnalysisComplete={handleChartComplete}
                   onAnalysisStageChange={handleAnalysisStageChange}
                 />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Progress Indicator */}
-        {isAnalyzing && (
-          <div className="flex justify-center items-center space-x-2">
-            {steps.map((_, index) => (
-              <div
-                key={index}
-                className={`h-2 w-2 rounded-full ${
-                  index === currentStepIndex
-                    ? "bg-[#FF6B00]"
-                    : index < currentStepIndex
-                    ? "bg-[#FF6B00]/50"
-                    : "bg-[#333333]"
-                }`}
-              />
-            ))}
-          </div>
-        )}
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    );
-  }
-);
+
+      {/* Progress Indicator */}
+      {isAnalyzing && (
+        <div className="flex justify-center items-center space-x-2">
+          {steps.map((_, index) => (
+            <div
+              key={index}
+              className={`h-2 w-2 rounded-full ${
+                index === currentStepIndex
+                  ? "bg-[#FF6B00]"
+                  : index < currentStepIndex
+                  ? "bg-[#FF6B00]/50"
+                  : "bg-[#333333]"
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+});
 
 AnalysisSequence.displayName = "AnalysisSequence";
 

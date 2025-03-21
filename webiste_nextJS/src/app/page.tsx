@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { FloorPlan, SensorPosition } from "@/components/FloorPlan";
@@ -8,7 +8,12 @@ import {
   AnalysisSequence,
   type AnalysisSequenceRef,
 } from "@/components/AnalysisSequence";
-import deviceData from "../../mock_data/device_data_sample_readable.json";
+// Import available data files
+import deviceData1 from "../../mock_data/device_data_sample_1.json";
+import deviceData2 from "../../mock_data/device_data_sample_2.json";
+import deviceData3 from "../../mock_data/device_data_sample_3.json";
+import deviceData4 from "../../mock_data/device_data_sample_4.json";
+import rollingAvgData from "../../mock_data/device_data_rolling_avg.json";
 import { ChatBubble } from "@/components/ChatBubble";
 import { useAppState, AppState } from "@/context/AppStateContext";
 
@@ -19,7 +24,24 @@ export default function Home() {
     undefined
   );
   const [currentAnalysisStep, setCurrentAnalysisStep] = useState(0);
-  const [optimizeDelay, setOptimizeDelay] = useState(500); // Default 500ms between sensors
+  const optimizeDelay = 500;
+
+  // Current data file based on analysis step
+  const getCurrentData = () => {
+    // Return data file based on analysis step (cycling through all 4 files)
+    switch (currentAnalysisStep % 4) {
+      case 0:
+        return deviceData1;
+      case 1:
+        return deviceData2;
+      case 2:
+        return deviceData3;
+      case 3:
+        return deviceData4;
+      default:
+        return deviceData1;
+    }
+  };
 
   const floors = [
     {
@@ -57,48 +79,51 @@ export default function Home() {
   ];
 
   // Define the analysis steps
-  const analysisSteps = [
-    {
-      title: "Temperature Difference Analysis",
-      xAxis: "sample_time",
-      yAxis: "DeltaT_K",
-      xLabel: "Time",
-      yLabel: "Temperature Difference (K)",
-      buildUpTime: 20,
-      datatype: "DATEPACK XX01",
-      sensorId: "sensor1", // Link to sensor position
-    },
-    {
-      title: "Flow Volume Analysis",
-      xAxis: "sample_time",
-      yAxis: "Flow_Volume_total_m3",
-      xLabel: "Time",
-      yLabel: "Flow Volume (m³)",
-      buildUpTime: 20,
-      datatype: "DATEPACK XX02",
-      sensorId: "sensor2", // Link to sensor position
-    },
-    {
-      title: "Power Analysis",
-      xAxis: "sample_time",
-      yAxis: "AbsPower_Fb_W",
-      xLabel: "Time",
-      yLabel: "Absolute Power (W)",
-      buildUpTime: 20,
-      datatype: "DATEPACK XX03",
-      sensorId: "sensor3", // Link to sensor position
-    },
-    {
-      title: "Position Analysis",
-      xAxis: "sample_time",
-      yAxis: "RelPos_Fb",
-      xLabel: "Time",
-      yLabel: "Relative Position",
-      buildUpTime: 20,
-      datatype: "DATEPACK XX04",
-      sensorId: "sensor4", // Link to sensor position
-    },
-  ];
+  const analysisSteps = useMemo(
+    () => [
+      {
+        title: "Temperature Analysis Plot 1",
+        xAxis: "sample_time",
+        yAxis: "DeltaT_K",
+        xLabel: "Time",
+        yLabel: "Temperature Difference (K)",
+        buildUpTime: 20,
+        datatype: "ID: 26245f9f-8f9f-41b8-90bc-fa47640395f2",
+        sensorId: "sensor1", // Link to sensor position
+      },
+      {
+        title: "Temperature Analysis Plot 2",
+        xAxis: "sample_time",
+        yAxis: "DeltaT_K",
+        xLabel: "Time",
+        yLabel: "Temperature Difference (K)",
+        buildUpTime: 20,
+        datatype: "ID: 25ff3a33-6eba-4238-9b8f-c0dea3f2e2c3",
+        sensorId: "sensor2", // Link to sensor position
+      },
+      {
+        title: "Temperature Analysis Plot 3",
+        xAxis: "sample_time",
+        yAxis: "DeltaT_K",
+        xLabel: "Time",
+        yLabel: "Temperature Difference (K)",
+        buildUpTime: 20,
+        datatype: "ID: 5dd3b941-aab6-44de-bdb6-b5e82026cc54",
+        sensorId: "sensor3", // Link to sensor position
+      },
+      {
+        title: "Temperature Analysis Plot 4",
+        xAxis: "sample_time",
+        yAxis: "DeltaT_K",
+        xLabel: "Time",
+        yLabel: "Temperature Difference (K)",
+        buildUpTime: 20,
+        datatype: "ID: 96e6013a-9e90-4dbd-9070-d6b4732f42b8",
+        sensorId: "sensor4", // Link to sensor position
+      },
+    ],
+    []
+  );
 
   // Update current sensor based on analysis step
   useEffect(() => {
@@ -111,17 +136,19 @@ export default function Home() {
 
   // Listen for analysis step changes
   useEffect(() => {
+    const refCurrent = analysisRef.current;
+
     const handleAnalysisStepChange = (step: number) => {
       setCurrentAnalysisStep(step);
     };
 
-    if (analysisRef.current) {
-      analysisRef.current.onStepChange = handleAnalysisStepChange;
+    if (refCurrent) {
+      refCurrent.onStepChange = handleAnalysisStepChange;
     }
 
     return () => {
-      if (analysisRef.current) {
-        analysisRef.current.onStepChange = null;
+      if (refCurrent) {
+        refCurrent.onStepChange = null;
       }
     };
   }, []);
@@ -129,7 +156,10 @@ export default function Home() {
   // Handle optimization start
   const handleOptimize = () => {
     // This function is called when the optimize button is clicked
-    console.log("Starting optimization with delay:", optimizeDelay);
+    if (analysisRef.current) {
+      // Tell AnalysisSequence to show optimization data
+      analysisRef.current.showOptimizationData(rollingAvgData);
+    }
   };
 
   return (
@@ -180,10 +210,11 @@ export default function Home() {
                 }}
               >
                 <AnalysisSequence
-                  data={deviceData}
+                  data={
+                    getCurrentData() as Record<string, number | string | null>[]
+                  }
                   steps={analysisSteps}
                   defaultBuildUpTime={50}
-                  defaultAnalysisTime={2000}
                   ref={analysisRef}
                 />
               </div>
