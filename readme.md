@@ -30,15 +30,25 @@ Smartsne is an innovative solution developed in collaboration with Belimo that t
 
 ### Problem Statement
 
-Buildings account for approximately 40% of global energy consumption, with HVAC systems being the primary contributor. Most building managers lack proper tools to monitor their HVAC systems efficiently, resulting in:
+Buildings account for approximately 40% of global energy consumption, with HVAC systems being the primary contributor. Most building managers lack proper tools to monitor their HVAC systems efficiently. We know that data harvested over 10 years can be used. Our AI, data-driven solution empowers users to optimize their devices.
 
 ### Solution Overview
 
+Our solutions integrates AI to learn the data and reduce waist.
 
+![SmartSense Dashboard Demo](recources/product_showcase.gif)
+
+We have made multiple plots to analyse the data and come to our conclusion:
+![Plots1](recources/2025-03-21_04-48.png)
+Also some calculations helped us to come to our conclusion:
+![Plots2](recources/2025-03-21_04-50.png)
+So a lot of energy can be saved
 ## Tech Stack and Dependencies
+Our project leverages a comprehensive tech stack:
 
-
----
+- **Data Analysis**: Python ecosystem with Jupyter Notebooks, pandas, NumPy, and PySpark for processing large datasets
+- **Data Visualization**: Matplotlib, Seaborn, and Plotly for interactive visualizations
+- **Frontend**: Next.js with React for a responsive, modern user interface
 
 ## Setup and Installation Instructions
 
@@ -46,27 +56,20 @@ To set up the project locally, follow these steps:
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/githard/belimo-climate-iq.git
-   cd belimo-climate-iq
+   git clone https://github.com/oiver12/StartHack25_GitHard.git
+   cd StartHack25/webiste_nextJS
    ```
 
 2. **Install Dependencies**:
    ```bash
    npm install
    ```
-
-3. **Environment Configuration**:
-   Create a `.env` file based on the `.env.example` template and configure your environment variables.
-
-4. **Start the Development Server**:
+3. **Start the Development Server**:
    ```bash
    npm run dev
    ```
 
-5. **API Configuration**:
-   Configure the connection to your Belimo Energy Valves or use our simulator for testing purposes.
-
-6. **Access the Application**:
+5. **Access the Application**:
    Open your browser and navigate to `http://localhost:3000`
 
 ---
@@ -78,7 +81,7 @@ To set up the project locally, follow these steps:
 
 - [Liv Richter](https://github.com/)
 - [Oliver Baumgartner](https://github.com/oiver12)
-- [Florian Borchard](https://github.com/RobinZweifel)
-- [Lionel Ding](https://github.com/InTheNooB)
+- [Florian Borchard](https://github.com/)
+- [Emanual Amacher](https://github.com/)
 
 ---

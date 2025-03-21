@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useAppState, AppState } from "@/context/AppStateContext";
-
+import { speedControl } from "@/config/speedControl";
 // Analysis explanation messages for each sensor's temperature analysis
 const analysisExplanations = [
   `Sensor 1 (Main Heating Flow):
@@ -134,7 +134,7 @@ export function ChatBubble() {
     setProgressBar("ANALYZING DATA... [");
     let hashCount = 0;
     const maxHashes = 20; // Reduced for smoother animation in 1 second
-    const intervalTime = 70; // 20 steps * 50ms = 1000ms (1 second)
+    const intervalTime = speedControl.analysingTimeChart / maxHashes - 10; // 20 steps * 50ms = 1000ms (1 second)
 
     // Update progress bar every 50ms to complete in 1 second
     progressTimerRef.current = setInterval(() => {
@@ -164,7 +164,7 @@ export function ChatBubble() {
       // Continue typing message
       typingTimerRef.current = setTimeout(() => {
         setCharIndex((prev) => prev + 1);
-      }, 15); // Typing speed
+      }, speedControl.chatBotWriteSpeedCPS); // Typing speed
     } else {
       // Message complete, add to messages list
       setMessages((prev) => [...prev, currentMessage]);

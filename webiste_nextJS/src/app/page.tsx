@@ -17,6 +17,7 @@ import rollingAvgData from "../../mock_data/device_data_rolling_avg.json";
 import { ChatBubble } from "@/components/ChatBubble";
 import { useAppState, AppState } from "@/context/AppStateContext";
 import { cardStyle, cardClassName } from "@/styles/cards";
+import { speedControl } from "@/config/speedControl";
 
 export default function Home() {
   const analysisRef = useRef<AnalysisSequenceRef>(null);
@@ -88,7 +89,7 @@ export default function Home() {
         yAxis: "DeltaT_K",
         xLabel: "Time",
         yLabel: "Temperature Difference (K)",
-        buildUpTime: 20,
+        buildUpTime: speedControl.chartBuildUpTime,
         datatype: "ID: 26245f9f-8f9f-41b8-90bc-fa47640395f2",
         sensorId: "sensor1", // Link to sensor position
       },
@@ -98,7 +99,7 @@ export default function Home() {
         yAxis: "DeltaT_K",
         xLabel: "Time",
         yLabel: "Temperature Difference (K)",
-        buildUpTime: 20,
+        buildUpTime: speedControl.chartBuildUpTime,
         datatype: "ID: 25ff3a33-6eba-4238-9b8f-c0dea3f2e2c3",
         sensorId: "sensor2", // Link to sensor position
       },
@@ -108,7 +109,7 @@ export default function Home() {
         yAxis: "DeltaT_K",
         xLabel: "Time",
         yLabel: "Temperature Difference (K)",
-        buildUpTime: 20,
+        buildUpTime: speedControl.chartBuildUpTime,
         datatype: "ID: 5dd3b941-aab6-44de-bdb6-b5e82026cc54",
         sensorId: "sensor3", // Link to sensor position
       },
@@ -118,7 +119,7 @@ export default function Home() {
         yAxis: "DeltaT_K",
         xLabel: "Time",
         yLabel: "Temperature Difference (K)",
-        buildUpTime: 20,
+        buildUpTime: speedControl.chartBuildUpTime,
         datatype: "ID: 96e6013a-9e90-4dbd-9070-d6b4732f42b8",
         sensorId: "sensor4", // Link to sensor position
       },

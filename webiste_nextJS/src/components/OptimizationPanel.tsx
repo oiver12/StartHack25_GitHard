@@ -139,7 +139,7 @@ export function OptimizationPanel({ onOptimize }: OptimizationPanelProps) {
           <div
             className={`${getTypographyClass(
               "h1"
-            )} transition-all duration-300`}
+            )} transition-all duration-200`}
           >
             {displayIndex}%
           </div>

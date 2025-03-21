@@ -14,7 +14,8 @@ import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { colors } from "@/config/colors";
-// Register ChartJS components
+import { speedControl } from "@/config/speedControl";
+speedControl.chartBuildUpTime; // Register ChartJS components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -85,7 +86,7 @@ export const OptimizedChart: React.FC<OptimizedChartProps> = ({
     if (pointIndex < timestamps.length) {
       const timer = setTimeout(() => {
         setPointIndex(pointIndex + 1);
-      }, 20); // Faster animation speed
+      }, speedControl.optimizedChartBuildUpTime); // Faster animation speed
       return () => clearTimeout(timer);
     }
   }, [pointIndex, timestamps.length]);

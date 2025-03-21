@@ -15,7 +15,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { colors } from "@/config/colors";
-
+import { speedControl } from "@/config/speedControl";
 // Register ChartJS components
 ChartJS.register(
   CategoryScale,
@@ -83,7 +83,7 @@ export function TemperatureChart({
           // Add a short pause before moving to analyzing stage
           setTimeout(() => {
             setAnalysisStage("analyzing");
-          }, 200); // 500ms pause after building is complete
+          }, 10); // 500ms pause after building is complete
           return prev;
         });
       }, buildUpTime);
@@ -93,7 +93,7 @@ export function TemperatureChart({
       // Start analysis animation
       const analysisTimer = setTimeout(() => {
         setAnalysisStage("complete");
-      }, 1500); // 2 seconds of analysis animation
+      }, speedControl.analysingTimeChart); // 2 seconds of analysis animation
 
       return () => clearTimeout(analysisTimer);
     } else if (analysisStage === "complete") {
